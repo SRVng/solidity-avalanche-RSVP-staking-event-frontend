@@ -1,14 +1,15 @@
 import React from 'react';
 import { ethers } from 'ethers';
+import { transactionPopup } from './utils';
 
 interface SwapProps {
-    RSVP: ethers.Contract
+    token: ethers.Contract
     signer: string | ethers.providers.JsonRpcSigner
 }
 
 const BuyToken = (props: SwapProps) => {
 
-    const RSVP = props.RSVP;
+    const evt = props.token;
     const signer = props.signer;
 
     const [state, setState] = React.useState({
@@ -24,10 +25,14 @@ const BuyToken = (props: SwapProps) => {
     const AVAX = tryConvert(state.amount);
 
     const swap = async () => {
-        const contractWithSigner = RSVP.connect(signer);
-        let tx = await contractWithSigner.swap({value: ethers.utils.parseEther(AVAX)});
-        await tx.wait();
-        console.log(tx.hash);
+        const contractWithSigner = evt.connect(signer);
+        try {
+            let tx = await contractWithSigner.swap({value: ethers.utils.parseEther(AVAX)});
+            await tx.wait();
+            transactionPopup(tx.hash, false);
+        } catch(e: any) {
+            transactionPopup(e.hash, true, e.data.message)
+        }
     }
 
   return (
@@ -44,7 +49,9 @@ const BuyToken = (props: SwapProps) => {
                 setAmount={null}
                 changable={false} />
           </div>
+          <br/>
           <button onClick={swap}>Buy</button>
+          <BuyOnPangolin tokenAddress='0x790b47bebe7e135887baa1c9841048dc6ca348ed' />
       </div>
   );
 };
@@ -76,6 +83,23 @@ const SwapInput = (props: SwapInputProps) => {
                 <legend>{props.token}</legend>
                 <input value={props.amount} readOnly={true}/>
             </fieldset>
+        </div>
+    )
+}
+
+interface BuyOnPangolinProps {
+    tokenAddress: string
+}
+
+const BuyOnPangolin = (props: BuyOnPangolinProps) => {
+    const pangolinLink = "https://app.pangolin.exchange/#/swap?outputCurrency="
+    return (
+        <div>
+            <a href={pangolinLink + props.tokenAddress} target="_blank" rel="noreferrer">
+                <button>
+                    Buy on Pangolin
+                </button>
+            </a>
         </div>
     )
 }

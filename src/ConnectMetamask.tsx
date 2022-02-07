@@ -16,6 +16,7 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
   const [chainId, setChainId] = React.useState(network.chainId)
 
   React.useEffect(() => {
+
     const load = async () => {
       const signer = await getSigner();
       props.setAddressSigner({address: await signer.getAddress(), signer: signer});
@@ -44,9 +45,15 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
 
     }
 
-    checkChainId();
     load();
+    checkChainId();
   }, []);
+
+  window.ethereum.on('accountsChanged', () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000)
+  });
 
   if (props.addressSigner.address.length <= 1) {
     return (

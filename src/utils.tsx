@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { message } from "react-message-popup";
 
 export const network = {
     name: "Avalanche Fuji",
@@ -27,17 +28,23 @@ export const getProvider = (setNetwork?: {name: string, chainId: number}) => {
     }
 }
 
-export const getRsvpContract = () => {
+export const getContract = (contract: 'nft' | 'rsvp' | 'token') => {
 
     const provider = getProvider();
+    
+    const abiList = {
+        nft: require('./abi/nftAbi.json'),
+        rsvp: require('./abi/rsvpAbi.json'),
+        token: require('./abi/tokenAbi.json')
+    };
 
-    const abi = require("./abi.json");
+    const abi = abiList[contract];
     const CONTRACT_ADDRESS = abi.CONTRACT_ADDRESS;
     const CONTRACT_ABI = abi.CONTRACT_ABI;
 
-    const RSVP = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+    const CONTRACT = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 
-    return RSVP
+    return CONTRACT
 }
 
 export const getSigner = async () => {
@@ -49,4 +56,33 @@ export const getSigner = async () => {
     const signer = provider.getSigner();
 
     return signer
+}
+
+export const getContractWithSigner = (
+    contract: ethers.Contract,
+    signer: string | ethers.providers.JsonRpcSigner
+) => {
+    return contract.connect(signer)
+}
+
+export const getAddress = async () => {
+    const provider = await getProvider();
+    return await (await provider.getSigner()).getAddress();
+}
+
+export const transactionPopup = (
+    hash: string,
+    error: boolean, 
+    errorMsg?: string) => {
+    if (!error) {
+        message.loading('Sending transaction', 4000).then(() => {
+            setTimeout(() => {
+                message.success("Hash: " + hash, 4000)
+            }, 4000);
+        });
+    } else if (errorMsg) {
+        message.error(errorMsg, 4000);
+    } else {
+        message.error('Error occured', 4000);
+    }
 }
