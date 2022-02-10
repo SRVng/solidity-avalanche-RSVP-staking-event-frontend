@@ -1,0 +1,46 @@
+@import './vars.css';
+
+.bg {
+    overflow: hidden;
+}
+
+.bg::before {
+    content: '';
+
+    position: absolute;
+    z-index: -1;
+
+    background-image: linear-gradient(to right, #B3EBF5, #FFE1FA);
+    background-position: center;
+    background-size: auto;
+
+    min-height: 98%;
+    min-width: 99%;
+}
+
+.bg::before {
+    filter: blur(10px);
+}
+
+.home {
+    font-size: 50px;
+    text-align: center;
+
+    position: relative;
+    padding: 15px;
+    width: 1000px;
+
+    border: 2px solid black;
+    border-radius: 20px;
+
+    margin: auto;
+    margin-top: 60px;
+}
+
+.userDetails {
+    border: 2px solid black;
+    padding: 20px 20px;
+
+    width: 500px;
+    margin: auto;
+}

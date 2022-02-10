@@ -2,12 +2,12 @@ import { ethers } from 'ethers';
 import React from 'react';
 import { getContractWithSigner, transactionPopup } from './utils';
 
-interface RewardDetailsProps {
+interface WithdrawRewardProps {
     RSVP: ethers.Contract
     signer: string | ethers.providers.JsonRpcSigner
 }
 
-const WithdrawReward = (props: RewardDetailsProps) => {
+const WithdrawReward = (props: WithdrawRewardProps) => {
 
     const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
 

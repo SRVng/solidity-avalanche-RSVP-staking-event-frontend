@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { message } from "react-message-popup";
+import React from 'react';
 
 export const network = {
     name: "Avalanche Fuji",
@@ -28,13 +29,13 @@ export const getProvider = (setNetwork?: {name: string, chainId: number}) => {
     }
 }
 
-export const getContract = (contract: 'nft' | 'rsvp' | 'token') => {
+export const getContract = (contract: 'nft' | 'RSVP' | 'token') => {
 
     const provider = getProvider();
     
     const abiList = {
         nft: require('./abi/nftAbi.json'),
-        rsvp: require('./abi/rsvpAbi.json'),
+        RSVP: require('./abi/rsvpAbi.json'),
         token: require('./abi/tokenAbi.json')
     };
 
@@ -86,3 +87,13 @@ export const transactionPopup = (
         message.error('Error occured', 4000);
     }
 }
+
+export const useRSVP = {
+    RSVP: getContract("RSVP"),
+    signer: getProvider().getSigner()
+};
+
+export const useToken = {
+    token: getContract("token"),
+    signer: getProvider().getSigner()
+};

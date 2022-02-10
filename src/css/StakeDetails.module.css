@@ -1,0 +1,21 @@
+@import './vars.css';
+
+.container {
+    border: 2px solid black;
+    border-radius: 20px;
+
+    background-color: rgba(var(--primary-color), 0.8);
+
+    width: 300px;
+
+    text-align: left;
+
+    margin: auto;
+
+    font-family: var(--font-family);
+    font-size: larger;
+}
+
+.container p {
+    margin-left: 15px;
+}

@@ -1,6 +1,7 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
 import React from 'react';
 import { getSigner, network } from './utils';
+import styles from './css/ConnectMetamask.module.css';
 
 interface ConnectMetamaskProps {
   addressSigner: {
@@ -57,7 +58,7 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
 
   if (props.addressSigner.address.length <= 1) {
     return (
-      <div>
+      <div className={styles.fetchMetamask}>
         <h2>Please connect your metamask</h2>
       </div>
     );
@@ -65,15 +66,14 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
 
   if (chainId !== network.chainId) {
     return (
-      <div>
+      <div className={styles.fetchMetamask}>
         <h2>Please change network to Avalanche Fuji Testnet</h2>
       </div>
     )
   }
 
   return (
-    <div>
-      <h2>Welcome! {props.addressSigner.address}</h2>
+    <div className={styles.container}>
       {props.children}
     </div>
   );

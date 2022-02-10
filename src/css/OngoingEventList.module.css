@@ -1,0 +1,33 @@
+@import './vars.css';
+
+.container {
+    font-family: var(--font-family);
+    border-radius: 20px;
+    padding: 20px 20px;
+}
+
+.eventList {
+    font-size: larger;
+}
+
+.eventList ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    list-style-type: none;
+}
+
+.eventList ul li {
+    
+    border: 2px solid black;
+    border-radius: 20px;
+
+    padding: 10px;
+    width: 600px;
+    margin-bottom: 20px;
+
+    background-color: rgba(var(--primary-color), 0.5);
+}
+
+.eventList ul li :nth-child(n) {
+    display: inline;
+}

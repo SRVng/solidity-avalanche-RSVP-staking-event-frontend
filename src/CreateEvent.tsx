@@ -1,6 +1,7 @@
 import React from 'react';
 import { BigNumber, ethers } from 'ethers'
 import { getContractWithSigner, transactionPopup } from './utils';
+import styles from './css/CreateEvent.module.css';
 
 interface CreateEventProps {
     RSVP: ethers.Contract
@@ -55,35 +56,34 @@ const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
     }
 
     return (
-        <>
+        <div className={styles.container}>
         <form>
-            <label>
-                Event's name:
+            <label className={styles.nameInput}>
+                <p>Event's name:</p>
                 <input
                     name='name'
                     type='text'
                     onChange={handleInputChange} />
             </label>
             <br />
-            <label>
-                Ending time:
+            <label className={styles.endInput}>
+                <p>Ending time:</p>
                 <input
                     name='timeEnd'
                     type='datetime-local'
                     onChange={handleInputChange} />
             </label>
             <br />
-            <label>
-                EVT Amount to stake (as an event creator):
+            <label className={styles.stakeInput}>
+                <p>EVT Amount to stake:</p>
                 <input
                     name='stake'
                     type='number'
                     onChange={handleInputChange} />
             </label>
         </form>
-        <button onClick={() => {console.log(inputState)}}>Input</button>
         <button onClick={createEvent}>Create</button>
-        </>
+        </div>
     )
 }
 

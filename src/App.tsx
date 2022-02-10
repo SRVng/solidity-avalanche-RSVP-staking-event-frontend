@@ -7,10 +7,16 @@ import CreateEvent from './CreateEvent';
 import EndEvent from './EndEvent';
 import ForceEnd from './ForceEnd';
 import OngoingEventList from './OngoingEventList';
-import RewardDetails from './RewardDetails';
+import WithdrawReward from './WithdrawReward';
 import RSVP from './RSVP';
 import StakeDetails from './StakeDetails';
-import { getContract } from './utils';
+import { useRSVP, useToken } from './utils';
+
+import styles from './css/App.module.css';
+import fourButtonCSS from './css/FourButtonRSVP.module.css';
+
+import Header from './Header';
+import { Route, Routes } from 'react-router-dom';
 
 const App = () => {
 
@@ -19,74 +25,52 @@ const App = () => {
         signer: ""
     });
 
-    const [contract, setContract] = React.useState({
-        nft: getContract('nft'),
-        rsvp: getContract('rsvp'),
-        token: getContract('token')
-    });
-
-  return (
-      <div>
-          <DateTime />
-          <ConnectMetamask addressSigner={addressSigner} setAddressSigner={setAddressSigner}>
-              <ContractOrder RSVP={contract.rsvp} token={contract.token} signer={addressSigner.signer}/>
-          </ConnectMetamask>
-      </div>
-  );
+    return (
+        <div className={styles.bg}>    
+        <ConnectMetamask addressSigner={addressSigner} setAddressSigner={setAddressSigner}>
+        <Routes>
+            <Route path="/" element={<Header address={addressSigner.address}/>}>
+                <Route path="home" element={<Homepage />} />
+                <Route path="buy" element={<BuyToken {...useToken}/>} />
+                <Route path="create" element={<CreateEvent {...useRSVP} />} />
+                <Route path="rsvp" element={
+                    <div>
+                        <OngoingEventList homePage={false} {...useRSVP} />
+                        <div className={styles.userDetails}>
+                            <RSVP {...useRSVP} />
+                            <StakeDetails {...useRSVP} />
+                            <FourButton />
+                        </div>
+                    </div>
+                }/>
+                <Route path="*" element={<></>}/>
+            </Route>
+        </Routes>
+        </ConnectMetamask>
+        </div>
+    )
 };
 
-const DateTime = () => {
-
-    const [date, setDate] = React.useState({
-        unix: (Date.now() / 1000).toFixed(0),
-        dateTime: new Date().toLocaleString()
-    });
-
-    React.useEffect(() => {
-        setInterval(() => {
-            setDate({
-                unix: (Date.now() / 1000).toFixed(0),
-                dateTime: new Date().toLocaleString()
-            })
-        }, 1000)
-    }, [])
+const Homepage = () => {
 
     return (
-        <div>
-            {date.dateTime}
-            <br />
-            {date.unix}
+        <div className={styles.home}>
+            <OngoingEventList homePage={true} {...useRSVP} />
         </div>
     )
 }
 
-interface ContractOrderProps {
-    RSVP: ethers.Contract
-    token: ethers.Contract
-    signer: string | ethers.providers.JsonRpcSigner
-}
-
-const ContractOrder = (props: ContractOrderProps) => {
-    const useRSVP = {
-        RSVP: props.RSVP,
-        signer: props.signer
-    };
-    const useToken = {
-        token: props.token,
-        signer: props.signer
-    }
-
+const FourButton = () => {
     return (
-        <div>
-            <BuyToken {...useToken} />
-            <CreateEvent {...useRSVP} />
-            <OngoingEventList {...useRSVP} />
+        <div className={fourButtonCSS.container}>
+            <div className={fourButtonCSS.firstLine}>
             <CheckIn {...useRSVP} />
+            <WithdrawReward {...useRSVP} />
+            </div>
+            <div className={fourButtonCSS.secondLine}>
             <EndEvent {...useRSVP} />
-            <StakeDetails {...useRSVP} />
-            <RSVP {...useRSVP} />
-            <RewardDetails {...useRSVP} />
             <ForceEnd {...useRSVP} />
+            </div>
         </div>
     )
 }

@@ -1,0 +1,53 @@
+@import './vars.css';
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+.container .nameInput,
+.container .endInput,
+.container .stakeInput {
+    border-radius: 20px;
+
+    display: inline-block;
+    margin-bottom: 20px;
+
+    width: 300px;
+
+    padding: 5px;
+
+    background-color: rgba(var(--primary-color));
+
+    font-family: var(--font-family);
+    font-size: larger;
+}
+
+.container label input {
+    border: 1px blanchedalmond;
+    width: 150px;
+
+    margin-bottom: 20px;
+}
+
+.container button {
+
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: rgba(var(--primary-color));
+
+    font-size: larger;
+    font-family: var(--font-family);
+
+    text-align: center;
+
+    padding: 20px 20px;
+    width: 200px;
+    margin: auto;
+
+    cursor: pointer;
+}
+
+.container button:hover {
+    box-shadow: 0px 0px 6px 5px rgba(var(--hover-color)); 
+}

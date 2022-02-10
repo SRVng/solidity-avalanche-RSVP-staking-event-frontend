@@ -1,6 +1,7 @@
 import React from 'react';
 import { ethers } from 'ethers';
 import { transactionPopup } from './utils';
+import styles from './css/BuyToken.module.css';
 
 interface SwapProps {
     token: ethers.Contract
@@ -36,7 +37,7 @@ const BuyToken = (props: SwapProps) => {
     }
 
   return (
-      <div>
+      <div className={styles.container}>
           <div>
               <SwapInput
                 token='EVT'
@@ -50,8 +51,11 @@ const BuyToken = (props: SwapProps) => {
                 changable={false} />
           </div>
           <br/>
-          <button onClick={swap}>Buy</button>
-          <BuyOnPangolin tokenAddress='0x790b47bebe7e135887baa1c9841048dc6ca348ed' />
+          <div className={styles.btncontainer}>
+            <button className={styles.buybtn} onClick={swap}>Buy</button>
+            &nbsp;
+            <BuyOnPangolin tokenAddress='0x790b47bebe7e135887baa1c9841048dc6ca348ed' />
+          </div>
       </div>
   );
 };
@@ -70,15 +74,17 @@ const SwapInput = (props: SwapInputProps) => {
             props.setAmount!(e.target.value)
         }
         return (
+            <div className={styles.field}>
             <fieldset>
                 <legend>Enter {props.token} amount</legend>
                 <input value={props.amount} onChange={handleOnChange} />
             </fieldset>
+            </div>
         ) 
     }
 
     return (
-        <div>
+        <div className={styles.field}>
             <fieldset>
                 <legend>{props.token}</legend>
                 <input value={props.amount} readOnly={true}/>
@@ -96,7 +102,7 @@ const BuyOnPangolin = (props: BuyOnPangolinProps) => {
     return (
         <div>
             <a href={pangolinLink + props.tokenAddress} target="_blank" rel="noreferrer">
-                <button>
+                <button className={styles.pangolinbtn}>
                     Buy on Pangolin
                 </button>
             </a>

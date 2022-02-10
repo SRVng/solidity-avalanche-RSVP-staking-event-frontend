@@ -1,10 +1,12 @@
 import React from 'react';
 import { ethers } from 'ethers';
 import { getContractWithSigner } from './utils';
+import styles from './css/OngoingEventList.module.css';
 
 interface OngoingEventListProps {
     RSVP: ethers.Contract
     signer: string | ethers.providers.JsonRpcSigner
+    homePage: boolean
 };
 
 const OngoingEventList = (props: OngoingEventListProps) => {
@@ -12,14 +14,15 @@ const OngoingEventList = (props: OngoingEventListProps) => {
     const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
 
   return (
-      <div>
-          <FetchEvent contractWithSigner={contractWithSigner} />
+      <div className={styles.container}>
+          <FetchEvent contractWithSigner={contractWithSigner} homePage={props.homePage}/>
       </div>
   )
 };
 
 interface FetchEventProps {
     contractWithSigner: ethers.Contract
+    homePage: boolean
 }
 
 const FetchEvent = (props: FetchEventProps) => {
@@ -30,7 +33,8 @@ const FetchEvent = (props: FetchEventProps) => {
         until: '',
         creator: '',
         checkIn: '',
-        untilUNIX: ''
+        untilUNIX: '',
+        checkInPeriod: ''
     });
 
     React.useEffect(() => {
@@ -45,7 +49,8 @@ const FetchEvent = (props: FetchEventProps) => {
                     until: '',
                     creator: '',
                     checkIn: '',
-                    untilUNIX: ''
+                    untilUNIX: '',
+                    checkInPeriod: ''
                 });
                 
                 return;
@@ -57,7 +62,8 @@ const FetchEvent = (props: FetchEventProps) => {
                 until: new Date(tx.until.toNumber() * 1000).toLocaleString(),
                 creator: tx.creator,
                 checkIn: new Date((tx.until.toNumber() + parseInt(checkInperiodTX)) * 1000).toLocaleString(),
-                untilUNIX: tx.until.toString()
+                untilUNIX: tx.until.toString(),
+                checkInPeriod: checkInperiodTX
             });
         }
 
@@ -68,26 +74,51 @@ const FetchEvent = (props: FetchEventProps) => {
         fetchEvent();
     }, [])
 
+    if (props.homePage) {
+        if (eventDetails.startFrom === '') {
+            return (
+            <div>
+                <p>No ongoing event</p>
+            </div>
+            )
+        } else if ((parseInt(eventDetails.untilUNIX) - (Date.now() / 1000)) < (-1 * parseInt(eventDetails.checkInPeriod))) {
+            return (
+                <div>
+                    <p>Check-in period done, Please wait event's creator end this event. </p>  
+                </div>
+            )
+        } else if ((parseInt(eventDetails.untilUNIX) - (Date.now() / 1000)) < 0) {
+            return (
+                <div>
+                    <p>It's check-in period.</p>
+                </div>
+            )
+        }
+    }
+
     if (eventDetails.startFrom === '') {
         return (
-        <>
-            <p>No event</p>
-        </>
+        <div style={{textAlign: 'center', fontSize: '30px'}}>
+            <p>No ongoing event</p>
+        </div>
         )
     }
 
     return (
         <>
+            {props.homePage ? <Countdown until={eventDetails.untilUNIX}/>
+            :
+            <div className={styles.eventList}>
             <ul>
                 <li>Event: {eventDetails.name}</li>
                 <li>Starting from: {eventDetails.startFrom}</li>
                 <li>Ending: {eventDetails.until}</li>
-                <li>Countdown: {
-                    <Countdown until={eventDetails.untilUNIX}/>
-                    }</li>
+                <li>Countdown: {<Countdown until={eventDetails.untilUNIX}/>}</li>
                 <li>Checkin period: From {eventDetails.until} To {eventDetails.checkIn}</li>
                 <li>Event's Creator: {eventDetails.creator}</li>
             </ul>
+            </div>
+            }
         </>
     )
 }
@@ -134,8 +165,12 @@ const Countdown = (props: {until: string}) => {
 
     }, [props.until])
 
+    if (countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) {
+        return <div className={styles.setFont}><p>Event ended</p></div>
+    }
+
     return (
-        <>{countdown.hours}:{countdown.minutes}:{countdown.seconds}</>
+        <div className={styles.setFont}>{countdown.hours}:{countdown.minutes}:{countdown.seconds}</div>
     )
 }
 

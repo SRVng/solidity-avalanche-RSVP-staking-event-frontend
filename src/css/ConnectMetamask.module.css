@@ -1,0 +1,15 @@
+@import './vars.css';
+
+.fetchMetamask {
+    border: 2px solid black;
+    border-radius: 10px;
+
+    padding: 20px 20px;
+
+    text-align:center;
+
+    font-family: var(--font-family);
+    font-size: larger;
+
+    margin-top: 20px;
+}

@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import React from 'react';
 import { getAddress, getContractWithSigner } from './utils';
+import styles from './css/StakeDetails.module.css';
 
 interface StakeDetailsProps {
     RSVP: ethers.Contract
@@ -63,9 +64,9 @@ const AllStake = (props: StakeProps) => {
     }, [])
 
     return (
-        <div>
-            <p>Your EVT Staked: {userStake.stakeAmount}</p>
-            <p>Staked at: {userStake.stakeTime}</p>
+        <div className={styles.container}>
+            <p>Your EVT Staked: {userStake.stakeAmount === '' ? 0 : userStake.stakeAmount}</p>
+            <p>Staked at: {userStake.stakeTime === '' ? '-' : userStake.stakeTime}</p>
             <p>Total EVT Staked: {totalStake}</p>
         </div>
     )

@@ -1,0 +1,65 @@
+@import './vars.css';
+
+.container button {
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: rgba(var(--primary-color));
+
+    font-size: larger;
+    font-family: var(--font-family);
+}
+
+.btncontainer {
+    width: 200px;
+
+    padding: 10px;
+    position: relative;
+    text-align: center;
+
+    margin: auto;
+}
+
+.buybtn {
+    text-align: center;
+    padding: 20px 20px;
+    width: 200px;
+    margin: auto;
+
+    cursor: pointer;
+}
+
+.pangolinbtn {
+    text-align: center;
+    padding: 20px 20px;
+    width: 200px;
+
+    cursor: pointer;
+}
+
+.buybtn:hover, .pangolinbtn:hover {
+    box-shadow: 0px 0px 6px 5px rgba(var(--hover-color));   
+}
+
+.field {
+    margin-top: 2rem;
+    border-radius: 20px;
+
+    font-family: var(--font-family);
+    font-size: larger;
+
+    position: static;
+    text-align: center;
+
+    width: 300px;
+    margin: auto;
+    margin-top: 20px;
+
+    background-color: rgba(var(--primary-color));
+    
+    padding: 10px;
+}
+
+fieldset {
+    border: 0 none;
+    padding: 10px;
+}

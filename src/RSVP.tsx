@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import React from 'react';
 import { getContractWithSigner, transactionPopup } from './utils';
+import styles from './css/RSVP.module.css';
 
 interface RSVPProps {
     RSVP: ethers.Contract
@@ -39,7 +40,7 @@ const RSVP = (props: RSVPProps) => {
     }
 
     return (
-        <div>
+        <div className={styles.container}>
             <input type={'number'} value={stakeAmount} onChange={handleOnChange}/>
             <button onClick={handleOnClick}>RSVP</button>
         </div>
