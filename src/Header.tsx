@@ -4,7 +4,7 @@ import styles from './css/Header.module.css';
 import metamaskLogo from './img/MetaMask_Fox.png';
 import homeLogo from './img/home.png';
 
-const Header = (props: {address: string}) => {
+const Header = (props: {address: string, balance: string}) => {
 
     const navigate = useNavigate();
 
@@ -15,6 +15,7 @@ const Header = (props: {address: string}) => {
   return (
       <div>
           <ShowAddress address={props.address}/>
+          <ShowBalance balance={props.balance}/>
           <DateTime />
           <Navbar />
           <Outlet />
@@ -92,6 +93,16 @@ const ShowAddress = (props: {address: string}) => {
             <p>
                 {props.address.slice(0,5) + '....' + props.address.slice(-4)} 
                 {metamaskImage}
+            </p>
+        </div>
+    )
+}
+
+const ShowBalance = (props: {balance: string}) => {
+    return (
+        <div className={styles.balance}>
+            <p>
+                {'EVT Balance: ' + props.balance.slice(0,6)}
             </p>
         </div>
     )
