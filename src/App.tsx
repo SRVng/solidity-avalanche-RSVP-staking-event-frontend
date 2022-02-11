@@ -17,6 +17,7 @@ import fourButtonCSS from './css/FourButtonRSVP.module.css';
 
 import Header from './Header';
 import { Route, Routes } from 'react-router-dom';
+import TokenBalance from './TokenBalance';
 
 const App = () => {
 
@@ -25,11 +26,14 @@ const App = () => {
         signer: ""
     });
 
+    const [balance, setBalance] = React.useState('');
+
     return (
         <div className={styles.bg}>    
         <ConnectMetamask addressSigner={addressSigner} setAddressSigner={setAddressSigner}>
+        <>
         <Routes>
-            <Route path="/" element={<Header address={addressSigner.address}/>}>
+            <Route path="/" element={<Header address={addressSigner.address} balance={balance}/>}>
                 <Route path="home" element={<Homepage />} />
                 <Route path="buy" element={<BuyToken {...useToken}/>} />
                 <Route path="create" element={<CreateEvent {...useRSVP} />} />
@@ -37,7 +41,7 @@ const App = () => {
                     <div>
                         <OngoingEventList homePage={false} {...useRSVP} />
                         <div className={styles.userDetails}>
-                            <RSVP {...useRSVP} />
+                            <RSVP balance={balance} {...useRSVP} />
                             <StakeDetails {...useRSVP} />
                             <FourButton />
                         </div>
@@ -46,6 +50,8 @@ const App = () => {
                 <Route path="*" element={<></>}/>
             </Route>
         </Routes>
+        <TokenBalance setBalance={setBalance} {...useToken}/>
+        </>
         </ConnectMetamask>
         </div>
     )
