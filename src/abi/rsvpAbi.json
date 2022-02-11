@@ -1,5 +1,5 @@
 {
-   "CONTRACT_ADDRESS": "0xd4bf336CbE35B37c3c99eEFd3e78060B880428Aa",
+   "CONTRACT_ADDRESS": "0x97c1fE88a16e22D609863b8F040b594F0130Ae6a",
    "CONTRACT_ABI": [
       {
          "inputs": [
@@ -194,6 +194,38 @@
                "internalType": "uint256",
                "name": "_stake",
                "type": "uint256"
+            },
+            {
+               "internalType": "bytes",
+               "name": "signature",
+               "type": "bytes"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "amount",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "wallet",
+                     "type": "address"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.RSVPData",
+               "name": "rsvp",
+               "type": "tuple"
             }
          ],
          "name": "RSVP",
@@ -217,6 +249,33 @@
                "internalType": "uint256",
                "name": "_stake",
                "type": "uint256"
+            },
+            {
+               "internalType": "bytes",
+               "name": "signature",
+               "type": "bytes"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "wallet",
+                     "type": "address"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.CreateData",
+               "name": "create",
+               "type": "tuple"
             }
          ],
          "name": "RSVP_Create",
@@ -230,6 +289,60 @@
                "internalType": "address payable",
                "name": "your_address",
                "type": "address"
+            },
+            {
+               "internalType": "bytes",
+               "name": "signature",
+               "type": "bytes"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "start",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "owner",
+                     "type": "address"
+                  },
+                  {
+                     "components": [
+                        {
+                           "internalType": "string",
+                           "name": "name",
+                           "type": "string"
+                        },
+                        {
+                           "internalType": "uint256",
+                           "name": "until",
+                           "type": "uint256"
+                        },
+                        {
+                           "internalType": "address",
+                           "name": "wallet",
+                           "type": "address"
+                        }
+                     ],
+                     "internalType": "struct RSVP_EIP712.CreateData",
+                     "name": "eventCreator",
+                     "type": "tuple"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.EndEventData",
+               "name": "endevent",
+               "type": "tuple"
             }
          ],
          "name": "RSVP_End",
@@ -438,7 +551,7 @@
          "name": "event_status",
          "outputs": [
             {
-               "internalType": "enum RSVP_Event.EventStatus",
+               "internalType": "enum RSVP_Event_With_EIP_712.EventStatus",
                "name": "",
                "type": "uint8"
             }
@@ -547,6 +660,257 @@
             }
          ],
          "stateMutability": "nonpayable",
+         "type": "function"
+      },
+      {
+         "inputs": [
+            {
+               "internalType": "address",
+               "name": "signer",
+               "type": "address"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "uint256",
+                     "name": "amount",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "wallet",
+                     "type": "address"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.BuyData",
+               "name": "buy",
+               "type": "tuple"
+            },
+            {
+               "internalType": "uint8",
+               "name": "v",
+               "type": "uint8"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "r",
+               "type": "bytes32"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "s",
+               "type": "bytes32"
+            }
+         ],
+         "name": "verifyBuy",
+         "outputs": [
+            {
+               "internalType": "bool",
+               "name": "",
+               "type": "bool"
+            }
+         ],
+         "stateMutability": "view",
+         "type": "function"
+      },
+      {
+         "inputs": [
+            {
+               "internalType": "address",
+               "name": "signer",
+               "type": "address"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "wallet",
+                     "type": "address"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.CreateData",
+               "name": "create",
+               "type": "tuple"
+            },
+            {
+               "internalType": "uint8",
+               "name": "v",
+               "type": "uint8"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "r",
+               "type": "bytes32"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "s",
+               "type": "bytes32"
+            }
+         ],
+         "name": "verifyCreate",
+         "outputs": [
+            {
+               "internalType": "bool",
+               "name": "",
+               "type": "bool"
+            }
+         ],
+         "stateMutability": "view",
+         "type": "function"
+      },
+      {
+         "inputs": [
+            {
+               "internalType": "address",
+               "name": "signer",
+               "type": "address"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "start",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "owner",
+                     "type": "address"
+                  },
+                  {
+                     "components": [
+                        {
+                           "internalType": "string",
+                           "name": "name",
+                           "type": "string"
+                        },
+                        {
+                           "internalType": "uint256",
+                           "name": "until",
+                           "type": "uint256"
+                        },
+                        {
+                           "internalType": "address",
+                           "name": "wallet",
+                           "type": "address"
+                        }
+                     ],
+                     "internalType": "struct RSVP_EIP712.CreateData",
+                     "name": "eventCreator",
+                     "type": "tuple"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.EndEventData",
+               "name": "endevent",
+               "type": "tuple"
+            },
+            {
+               "internalType": "uint8",
+               "name": "v",
+               "type": "uint8"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "r",
+               "type": "bytes32"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "s",
+               "type": "bytes32"
+            }
+         ],
+         "name": "verifyEndEvent",
+         "outputs": [
+            {
+               "internalType": "bool",
+               "name": "",
+               "type": "bool"
+            }
+         ],
+         "stateMutability": "view",
+         "type": "function"
+      },
+      {
+         "inputs": [
+            {
+               "internalType": "address",
+               "name": "signer",
+               "type": "address"
+            },
+            {
+               "components": [
+                  {
+                     "internalType": "string",
+                     "name": "name",
+                     "type": "string"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "until",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "uint256",
+                     "name": "amount",
+                     "type": "uint256"
+                  },
+                  {
+                     "internalType": "address",
+                     "name": "wallet",
+                     "type": "address"
+                  }
+               ],
+               "internalType": "struct RSVP_EIP712.RSVPData",
+               "name": "rsvp",
+               "type": "tuple"
+            },
+            {
+               "internalType": "uint8",
+               "name": "v",
+               "type": "uint8"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "r",
+               "type": "bytes32"
+            },
+            {
+               "internalType": "bytes32",
+               "name": "s",
+               "type": "bytes32"
+            }
+         ],
+         "name": "verifyRSVP",
+         "outputs": [
+            {
+               "internalType": "bool",
+               "name": "",
+               "type": "bool"
+            }
+         ],
+         "stateMutability": "view",
          "type": "function"
       },
       {

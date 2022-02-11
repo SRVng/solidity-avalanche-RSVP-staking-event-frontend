@@ -1,6 +1,6 @@
 import React from 'react';
-import { BigNumber, ethers } from 'ethers'
-import { getContractWithSigner, transactionPopup } from './utils';
+import { BigNumber, ethers, FixedNumber } from 'ethers'
+import { getContractWithSigner, getSignature, transactionPopup } from './utils';
 import styles from './css/CreateEvent.module.css';
 
 interface CreateEventProps {
@@ -41,18 +41,39 @@ const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
         updateInputState({ ...inputState!, [name]: value})
     };
 
-    const createEvent = async () => {
+    const requestSignature = async () => {
+
+        const CreateData = {
+            name: inputState!.name,
+            until: parseInt(FixedNumber.from(inputState!.timeEnd)._value),
+            wallet: window.ethereum.selectedAddress
+        };
+
+        const sig = await getSignature(CreateData);
+
+        return {sig, CreateData}
+    }
+
+    const createEvent = async ({sig, CreateData}: any) => {
+        
         try {
             let tx = await props.contractWithSigner.RSVP_Create(
                 inputState!.name,
                 inputState!.timeEnd,
                 inputState!.stake,
+                sig,
+                CreateData,
                 {value: ethers.utils.parseEther('0.1')});
             await tx.wait();
             transactionPopup(tx.hash, false);
         } catch(e: any) {
+            console.error(e);
             transactionPopup(e.hash, true, e.data.message);
         }
+    }
+
+    const handleOnClick = async () => {
+        createEvent(await requestSignature());
     }
 
     return (
@@ -82,7 +103,7 @@ const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
                     onChange={handleInputChange} />
             </label>
         </form>
-        <button onClick={createEvent}>Create</button>
+        <button onClick={handleOnClick}>Create</button>
         </div>
     )
 }

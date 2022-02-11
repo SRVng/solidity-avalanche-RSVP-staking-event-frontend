@@ -1,11 +1,12 @@
-import { ethers } from 'ethers';
+import { ethers, FixedNumber } from 'ethers';
 import React from 'react';
-import { getContractWithSigner, transactionPopup } from './utils';
+import { getContractWithSigner, getSignature, transactionPopup } from './utils';
 import styles from './css/RSVP.module.css';
 
 interface RSVPProps {
     RSVP: ethers.Contract
     signer: string | ethers.providers.JsonRpcSigner
+    balance: string
 }
 
 const RSVP = (props: RSVPProps) => {
@@ -25,24 +26,51 @@ const RSVP = (props: RSVPProps) => {
         }
     }
 
-    const sendRSVP = async () => {
+    const maxButton = () => {
+        setStakeAmount(parseInt(props.balance));
+    }
+
+    const requestSignature = async () => {
+
+        const eventDetails = await contractWithSigner.ongoing_event();
+
+        const RSVPData = {
+            name: eventDetails[0],
+            until: parseInt(FixedNumber.from(eventDetails[2])._value),
+            amount: stakeAmount,
+            wallet: window.ethereum.selectedAddress
+        };
+
+        const sig = await getSignature(RSVPData);
+
+        return {sig, RSVPData};
+    }
+
+    const sendRSVP = async ({sig, RSVPData}: any) => {
+
         try {
-            let tx = await contractWithSigner.RSVP(ethers.BigNumber.from(stakeAmount));
+            let tx = await contractWithSigner.RSVP(
+                ethers.BigNumber.from(stakeAmount),
+                sig,
+                RSVPData
+                );
             await tx.wait();
             transactionPopup(tx.hash, false);
         } catch(e: any) {
+            console.error(e)
             transactionPopup(e.hash, true, e.data.message);
         }
     }
 
-    const handleOnClick = () => {
-        sendRSVP();
+    const handleOnClick = async () => {
+        sendRSVP(await requestSignature());
     }
 
     return (
         <div className={styles.container}>
             <input type={'number'} value={stakeAmount} onChange={handleOnChange}/>
-            <button onClick={handleOnClick}>RSVP</button>
+            <button className={styles.maxButton} onClick={maxButton}>Max</button>
+            <button className={styles.rsvpButton} onClick={handleOnClick}>RSVP</button>
         </div>
     )
 };
