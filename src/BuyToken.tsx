@@ -1,6 +1,6 @@
 import React from 'react';
 import { ethers } from 'ethers';
-import { transactionPopup } from './utils';
+import { getContractWithSigner, transactionPopup } from './utils';
 import styles from './css/BuyToken.module.css';
 
 interface SwapProps {
@@ -9,9 +9,6 @@ interface SwapProps {
 }
 
 const BuyToken = (props: SwapProps) => {
-
-    const evt = props.token;
-    const signer = props.signer;
 
     const [state, setState] = React.useState({
         token: 'EVT',
@@ -26,12 +23,13 @@ const BuyToken = (props: SwapProps) => {
     const AVAX = tryConvert(state.amount);
 
     const swap = async () => {
-        const contractWithSigner = evt.connect(signer);
+        const contractWithSigner = getContractWithSigner(props.token, props.signer);
         try {
             let tx = await contractWithSigner.swap({value: ethers.utils.parseEther(AVAX)});
             await tx.wait();
             transactionPopup(tx.hash, false);
         } catch(e: any) {
+            console.error(e);
             transactionPopup(e.hash, true, e.data.message)
         }
     }

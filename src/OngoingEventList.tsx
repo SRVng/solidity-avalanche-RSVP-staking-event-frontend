@@ -166,7 +166,7 @@ const Countdown = (props: {until: string}) => {
     }, [props.until])
 
     if (countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) {
-        return <div className={styles.setFont}><p>Event ended</p></div>
+        return <div className={styles.setFont}><p>Event ended, Please check-in</p></div>
     }
 
     return (

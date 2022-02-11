@@ -59,7 +59,7 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
   if (props.addressSigner.address.length <= 1) {
     return (
       <div className={styles.fetchMetamask}>
-        <h2>Please connect your metamask</h2>
+        <h2>Please connect your Metamask</h2>
       </div>
     );
   }
