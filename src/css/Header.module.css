@@ -34,6 +34,9 @@
     background-color: wheat;
 
     display: inline-flex;
+
+    font-family: var(--font-family);
+    font-size: large;
 }
 
 .balance {
@@ -51,6 +54,9 @@
     background-color: wheat;
 
     display: inline-flex;
+
+    font-family: var(--font-family);
+    font-size: large;
 }
 
 .navbar {
@@ -64,7 +70,6 @@
     justify-content: center;
     margin: auto;
     gap: 50px;
-
 }
 
 .navLink .homemenu {
