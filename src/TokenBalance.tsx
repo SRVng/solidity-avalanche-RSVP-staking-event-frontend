@@ -23,7 +23,7 @@ const TokenBalance = (props: TokenBalanceProps) => {
 
         setInterval(() => {
             fetchBalance();
-        }, 30000);
+        }, 15000);
 
         fetchBalance();
     }, [])
