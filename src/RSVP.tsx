@@ -21,7 +21,7 @@ const RSVP = (props: RSVPProps) => {
             setStakeAmount(0);
         } else {
             setStakeAmount(
-                parseFloat(e.target.value)
+                parseInt(e.target.value)
             );
         }
     }
@@ -54,8 +54,7 @@ const RSVP = (props: RSVPProps) => {
                 sig,
                 RSVPData
                 );
-            await tx.wait();
-            transactionPopup(tx.hash, false);
+            transactionPopup(tx.hash, false, undefined, tx.wait);
         } catch(e: any) {
             console.error(e)
             transactionPopup(e.hash, true, e.data.message);

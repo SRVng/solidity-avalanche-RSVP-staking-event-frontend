@@ -14,8 +14,7 @@ const CheckIn = (props: CheckInProps) => {
     const checkInButton = async () => {
       try {
         let tx = await contractWithSigner.Check_in();
-        await tx.wait();
-        transactionPopup(tx.hash, false);
+        transactionPopup(tx.hash, false, undefined, tx.wait);
       } catch(e: any) {
         transactionPopup(e.hash, true, e.data.message)
       }

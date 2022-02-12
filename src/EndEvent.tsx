@@ -39,8 +39,7 @@ const EndEvent = (props: EndEventProps) => {
 
         try {
             let tx = await contractWithSigner.RSVP_End(address, sig, EndEventData);
-            await tx.wait();
-            transactionPopup(tx.hash, false);
+            transactionPopup(tx.hash, false, undefined, tx.wait);
         } catch(e: any) {
             console.error(e);
             transactionPopup(e.hash, true, e.data.message);

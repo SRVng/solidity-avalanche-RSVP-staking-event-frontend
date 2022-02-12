@@ -17,8 +17,7 @@ const ForceEnd = (props: ForceEndProps) => {
             let tx = await contractWithSigner.Force_End(
                 await getAddress()
             );
-            await tx.wait();
-            transactionPopup(tx.hash, false);
+            transactionPopup(tx.hash, false, undefined, tx.wait);
         } catch(e:any) {
             transactionPopup(e.hash, true, e.data.message);
         }

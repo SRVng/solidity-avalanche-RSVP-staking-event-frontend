@@ -64,8 +64,7 @@ const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
                 sig,
                 CreateData,
                 {value: ethers.utils.parseEther('0.1')});
-            await tx.wait();
-            transactionPopup(tx.hash, false);
+            transactionPopup(tx.hash, false, undefined, tx.wait);
         } catch(e: any) {
             console.error(e);
             transactionPopup(e.hash, true, e.data.message);

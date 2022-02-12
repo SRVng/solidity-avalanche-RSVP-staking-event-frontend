@@ -26,11 +26,10 @@ const BuyToken = (props: SwapProps) => {
         const contractWithSigner = getContractWithSigner(props.token, props.signer);
         try {
             let tx = await contractWithSigner.swap({value: ethers.utils.parseEther(AVAX)});
-            await tx.wait();
-            transactionPopup(tx.hash, false);
+            transactionPopup(tx.hash, false, undefined, tx.wait);
         } catch(e: any) {
             console.error(e);
-            transactionPopup(e.hash, true, e.data.message)
+            transactionPopup(e.hash, true, e.data.message);
         }
     }
 
