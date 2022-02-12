@@ -37,41 +37,52 @@ const FetchEvent = (props: FetchEventProps) => {
         checkInPeriod: ''
     });
 
-    React.useEffect(() => {
-        const fetchEvent = async () => {
-            let tx = await props.contractWithSigner.ongoing_event();
-            let checkInperiodTX = ethers.FixedNumber.from(await props.contractWithSigner.checked_in_period())._value;
+    const [isMount, setIsMount] = React.useState(true);
 
-            if (new Date(tx.start_from.toNumber() * 1000).getTime() === 0) {
+    React.useEffect(() => {
+
+        setIsMount(true);
+
+        if (isMount) {
+            const fetchEvent = async () => {
+                let tx = await props.contractWithSigner.ongoing_event();
+                let checkInperiodTX = ethers.FixedNumber.from(await props.contractWithSigner.checked_in_period())._value;
+    
+                if (new Date(tx.start_from.toNumber() * 1000).getTime() === 0) {
+                    updateEventDetails({
+                        name: tx.event_name,
+                        startFrom: '',
+                        until: '',
+                        creator: '',
+                        checkIn: '',
+                        untilUNIX: '',
+                        checkInPeriod: ''
+                    });
+                    
+                    return;
+                }
+    
                 updateEventDetails({
                     name: tx.event_name,
-                    startFrom: '',
-                    until: '',
-                    creator: '',
-                    checkIn: '',
-                    untilUNIX: '',
-                    checkInPeriod: ''
+                    startFrom: new Date(tx.start_from.toNumber() * 1000).toLocaleString(),
+                    until: new Date(tx.until.toNumber() * 1000).toLocaleString(),
+                    creator: tx.creator,
+                    checkIn: new Date((tx.until.toNumber() + parseInt(checkInperiodTX)) * 1000).toLocaleString(),
+                    untilUNIX: tx.until.toString(),
+                    checkInPeriod: checkInperiodTX
                 });
-                
-                return;
             }
-
-            updateEventDetails({
-                name: tx.event_name,
-                startFrom: new Date(tx.start_from.toNumber() * 1000).toLocaleString(),
-                until: new Date(tx.until.toNumber() * 1000).toLocaleString(),
-                creator: tx.creator,
-                checkIn: new Date((tx.until.toNumber() + parseInt(checkInperiodTX)) * 1000).toLocaleString(),
-                untilUNIX: tx.until.toString(),
-                checkInPeriod: checkInperiodTX
-            });
+    
+            setInterval(() => {
+                fetchEvent();
+            }, 15000)
+    
+            fetchEvent();
         }
 
-        setInterval(() => {
-            fetchEvent();
-        }, 15000)
-
-        fetchEvent();
+        return () => {
+            setIsMount(false);
+        }
     }, [])
 
     if (props.homePage) {
@@ -131,6 +142,8 @@ const Countdown = (props: {until: string}) => {
         seconds: 0
     });
 
+    const [isMount, setIsMount] = React.useState(true);
+
     const getTimeLeft = (sec: number) => {
         let seconds = Math.floor(sec % 60);
         let minutes = Math.floor((sec / 60) % 60);
@@ -151,16 +164,24 @@ const Countdown = (props: {until: string}) => {
 
     React.useEffect(() => {
 
-        if (!Number.isNaN(parseInt(props.until))) {
-            setInterval(() => {
-                const now = (Date.now() / 1000).toFixed(0);
-            
-                const timeLeft = parseInt(props.until) - parseInt(now);
-    
-                const calculatedTimeleft =  getTimeLeft(timeLeft);
-    
-                setCountdown(calculatedTimeleft);
-            }, 1000);   
+        setIsMount(true);
+
+        if (isMount) {
+            if (!Number.isNaN(parseInt(props.until))) {
+                setInterval(() => {
+                    const now = (Date.now() / 1000).toFixed(0);
+                
+                    const timeLeft = parseInt(props.until) - parseInt(now);
+        
+                    const calculatedTimeleft =  getTimeLeft(timeLeft);
+        
+                    setCountdown(calculatedTimeleft);
+                }, 1000);   
+            }
+        }
+
+        return () => {
+            setIsMount(false);
         }
 
     }, [props.until])

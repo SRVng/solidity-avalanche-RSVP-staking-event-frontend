@@ -30,6 +30,8 @@ const AllStake = (props: StakeProps) => {
         stakeTime: ''
     });
 
+    const [isMount, setIsMount] = React.useState(true);
+
     const [totalStake, updateTotalStake] = React.useState('0');
 
     const fetchStakeAmount = async () => {
@@ -57,10 +59,19 @@ const AllStake = (props: StakeProps) => {
     }
 
     React.useEffect(() => {
-        setInterval(() => {
+
+        setIsMount(true);
+
+        if (isMount) {
+            setInterval(() => {
+                fetchStakeAmount();
+            }, 15000)
             fetchStakeAmount();
-        }, 15000)
-        fetchStakeAmount();
+        }
+
+        return () => {
+            setIsMount(false);
+        }
     }, [])
 
     return (
