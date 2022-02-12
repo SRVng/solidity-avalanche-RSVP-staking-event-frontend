@@ -73,12 +73,12 @@ export const getAddress = async () => {
 export const transactionPopup = (
     hash: string,
     error: boolean, 
-    errorMsg?: string) => {
+    errorMsg?: string,
+    callback?: any) => {
     if (!error) {
-        message.loading('Sending transaction', 4000).then(() => {
-            setTimeout(() => {
-                message.success("Hash: " + hash, 4000)
-            }, 4000);
+        message.loading('Sending transaction', 8000).then(async () => {
+            callback && await callback();
+            message.success("Hash: " + hash, 4000);
         });
     } else if (errorMsg) {
         message.error(errorMsg, 4000);
