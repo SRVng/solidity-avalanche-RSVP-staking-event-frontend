@@ -13,3 +13,21 @@
 
     margin-top: 20px;
 }
+
+.addButton {
+    border: 1px solid black;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.addButton:hover {
+    box-shadow: 0px 0px 2px 2px white;
+}
+
+.manualAdd {
+    border: 2px solid black;
+    width: 500px;
+    margin: auto;
+    margin-top: 30px;
+}

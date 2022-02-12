@@ -65,9 +65,35 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
   }
 
   if (chainId !== network.chainId) {
+
+    const addNetwork = async () => {
+      await window.ethereum.request({method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: "0xa869",
+            chainName: network.name,
+            nativeCurrency: {
+              symbol: "AVAX"
+            },
+            rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+            blockExplorerUrls: ["https://testnet.snowtrace.io"] 
+          }
+        ]
+      });
+    }
+
     return (
       <div className={styles.fetchMetamask}>
         <h2>Please change network to Avalanche Fuji Testnet</h2>
+        <p>Old Metamask version may not support automatic add chain but you can do this manually</p>
+        <button className={styles.addButton} onClick={addNetwork}>Add Network</button>
+        <div className={styles.manualAdd}>
+          <p>Name: Avalanche Fuji Testnet</p>
+          <p>Chain ID: 43113</p>
+          <p>Native Currency: AVAX</p>
+          <p>RPC Url: https://api.avax-test.network/ext/bc/C/rpc</p>
+          <p>Explorer: https://testnet.snowtrace.io</p>
+        </div>
       </div>
     )
   }
