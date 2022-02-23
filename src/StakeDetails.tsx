@@ -78,9 +78,12 @@ const AllStake = (props: StakeProps) => {
 
     return (
         <div className={styles.container}>
+            <p className={styles.topic}>Your staking details</p>
+        <div className={styles.detailContainer}>
             <p>Your EVT Staked: {userStake.stakeAmount === '' ? 0 : userStake.stakeAmount}</p>
             <p>Staked at: {userStake.stakeTime === '' ? '-' : userStake.stakeTime}</p>
             <p>Total EVT Staked: {totalStake}</p>
+        </div>
         </div>
     )
 }

@@ -74,6 +74,8 @@ const Homepage = (props: {address: string}) => {
 const FourButton = () => {
     return (
         <div className={fourButtonCSS.container}>
+            <p>Interaction</p>
+            <div className={fourButtonCSS.buttonContainer}>
             <div className={fourButtonCSS.firstLine}>
             <CheckIn {...useRSVP} />
             <WithdrawReward {...useRSVP} />
@@ -81,6 +83,7 @@ const FourButton = () => {
             <div className={fourButtonCSS.secondLine}>
             <EndEvent {...useRSVP} />
             <ForceEnd {...useRSVP} />
+            </div>
             </div>
         </div>
     )

@@ -67,6 +67,7 @@ const RSVP = (props: RSVPProps) => {
 
     return (
         <div className={styles.container}>
+            <p>Staking</p>
             <input type={'number'} value={stakeAmount} onChange={handleOnChange}/>
             <button className={styles.maxButton} onClick={maxButton}>Max</button>
             <button className={styles.rsvpButton} onClick={handleOnClick}>RSVP</button>
