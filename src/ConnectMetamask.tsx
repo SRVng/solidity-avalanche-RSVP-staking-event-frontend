@@ -14,20 +14,20 @@ interface ConnectMetamaskProps {
 
 function ConnectMetamask(props: ConnectMetamaskProps) {
 
-  const [chainId, setChainId] = React.useState(network.chainId)
+
+  const [chainId, setChainId] = React.useState(network.chainId);
 
   React.useEffect(() => {
 
-    const load = async () => {
-      const signer = await getSigner();
-      props.setAddressSigner({address: await signer.getAddress(), signer: signer});
-    }
+    // const load = async () => {
+    //   const signer = await getSigner();
+    //   props.setAddressSigner({address: await signer.getAddress(), signer: signer});
+    // }
 
     const checkChainId = async () => {
       const signer = await getSigner();
       const chainId = await signer.getChainId();
 
-      console.log(chainId);
       setChainId(chainId);
 
       await window.ethereum.request({method: 'wallet_addEthereumChain',
@@ -43,28 +43,30 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
           }
         ]
     });
-
     }
 
-    load();
-    checkChainId();
-  }, []);
+    if (props.addressSigner.address) {
+      checkChainId();
+    }
+  })
 
   window.ethereum.on('accountsChanged', () => {
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000)
+    if (props.addressSigner.address) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000)
+    }
   });
 
-  if (props.addressSigner.address.length <= 1) {
-    return (
-      <div className={styles.fetchMetamask}>
-        <h2>Please connect your Metamask</h2>
-      </div>
-    );
-  }
+  // if (props.addressSigner.address.length <= 1) {
+  //   return (
+  //     <div className={styles.fetchMetamask}>
+  //       <h2>Please connect your Metamask</h2>
+  //     </div>
+  //   );
+  // }
 
-  if (chainId !== network.chainId) {
+  if (chainId !== network.chainId && props.addressSigner.address) {
 
     const addNetwork = async () => {
       await window.ethereum.request({method: 'wallet_addEthereumChain',

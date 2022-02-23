@@ -5,6 +5,7 @@ import styles from './css/StakeDetails.module.css';
 
 interface StakeDetailsProps {
     RSVP: ethers.Contract
+    address: string
     signer: string | ethers.providers.JsonRpcSigner
 }
 
@@ -14,13 +15,14 @@ const StakeDetails = (props: StakeDetailsProps) => {
 
     return (
         <div>
-            <AllStake contractWithSigner={contractWithSigner} />
+            <AllStake contractWithSigner={contractWithSigner} address={props.address}/>
         </div>
     )
 };
 
 interface StakeProps {
     contractWithSigner: ethers.Contract
+    address: string
 }
 
 const AllStake = (props: StakeProps) => {
@@ -62,7 +64,7 @@ const AllStake = (props: StakeProps) => {
 
         setIsMount(true);
 
-        if (isMount) {
+        if (isMount && props.address) {
             setInterval(() => {
                 fetchStakeAmount();
             }, 15000)

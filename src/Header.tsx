@@ -3,20 +3,36 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styles from './css/Header.module.css';
 import metamaskLogo from './img/MetaMask_Fox.png';
 import homeLogo from './img/home.png';
+import { getProvider, getSigner } from './utils';
+import { message } from 'react-message-popup';
 
-const Header = (props: {address: string, balance: string}) => {
+const Header = (props: {address: string, balance: string, setAddressSigner: Function}) => {
 
     const navigate = useNavigate();
 
     React.useEffect(() => {
         navigate("/home")
     }, [])
+    
+    React.useEffect(() => {
+
+        const checkExistConnect = async () => {
+          try {
+            const address = await getProvider().getSigner().getAddress();
+            const signer = await getSigner();
+            props.setAddressSigner({address: address, signer: signer})
+          } catch { 
+            message.warning('Please connect metamask', 3000); 
+          }
+        }
+    
+        checkExistConnect();
+      }, []);
 
   return (
       <div>
-          <ShowAddress address={props.address}/>
+          <ShowAddress address={props.address} setAddressSigner={props.setAddressSigner}/>
           <ShowBalance balance={props.balance}/>
-          <DateTime />
           <Navbar />
           <Outlet />
       </div>
@@ -61,39 +77,29 @@ const ActiveNavLink = (props: {to: string, children: ReactChild}) => {
     </NavLink>);
 }
 
-const DateTime = () => {
-
-    const [date, setDate] = React.useState({
-        unix: (Date.now() / 1000).toFixed(0),
-        dateTime: new Date().toLocaleString()
-    });
-
-    React.useEffect(() => {
-        setInterval(() => {
-            setDate({
-                unix: (Date.now() / 1000).toFixed(0),
-                dateTime: new Date().toLocaleString()
-            })
-        }, 1000)
-    }, [])
-
-    return (
-        <div className={styles.clock}>
-            <p>{date.dateTime}</p>
-        </div>
-    )
-}
-
-const ShowAddress = (props: {address: string}) => {
+const ShowAddress = (props: {address: string, setAddressSigner: Function}) => {
 
     const metamaskImage = <img src={metamaskLogo} alt="" width={20} height={20}/>
 
+    const load = async () => {
+        const signer = await getSigner();
+        props.setAddressSigner({address: await signer.getAddress(), signer: signer});
+    }
+
     return (
-        <div className={styles.address}>
-            <p>
-                {props.address.slice(0,5) + '....' + props.address.slice(-4)} 
-                {metamaskImage}
-            </p>
+        <div className={props.address ? styles.address : styles.noAddress}>
+            {
+                props.address ? (
+                    <p>
+                        {props.address.slice(0,5) + '....' + props.address.slice(-4)} 
+                        {metamaskImage}
+                    </p>
+                ) : (
+                    <p onClick={load}>
+                        {metamaskImage} Connect
+                    </p>
+                )
+            }
         </div>
     )
 }
@@ -102,7 +108,9 @@ const ShowBalance = (props: {balance: string}) => {
     return (
         <div className={styles.balance}>
             <p>
-                {'EVT Balance: ' + props.balance.slice(0,6)}
+                {
+                    'EVT Balance: ' + (props.balance ? props.balance.slice(0,6) : '...')
+                }
             </p>
         </div>
     )

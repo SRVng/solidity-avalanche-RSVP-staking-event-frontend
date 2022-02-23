@@ -5,24 +5,26 @@ import styles from './css/OngoingEventList.module.css';
 
 interface OngoingEventListProps {
     RSVP: ethers.Contract
+    address: string
     signer: string | ethers.providers.JsonRpcSigner
     homePage: boolean
 };
 
 const OngoingEventList = (props: OngoingEventListProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+    const contractWithSigner = props.address ? getContractWithSigner(props.RSVP, props.signer) : null;
 
   return (
       <div className={styles.container}>
-          <FetchEvent contractWithSigner={contractWithSigner} homePage={props.homePage}/>
+          <FetchEvent address={props.address} contractWithSigner={contractWithSigner} homePage={props.homePage}/>
       </div>
   )
 };
 
 interface FetchEventProps {
-    contractWithSigner: ethers.Contract
+    contractWithSigner: ethers.Contract | null
     homePage: boolean
+    address: string
 }
 
 const FetchEvent = (props: FetchEventProps) => {
@@ -45,32 +47,44 @@ const FetchEvent = (props: FetchEventProps) => {
 
         if (isMount) {
             const fetchEvent = async () => {
-                let tx = await props.contractWithSigner.ongoing_event();
-                let checkInperiodTX = ethers.FixedNumber.from(await props.contractWithSigner.checked_in_period())._value;
+                if (props.contractWithSigner) {
+                    let tx = await props.contractWithSigner.ongoing_event();
+                    let checkInperiodTX = ethers.FixedNumber.from(await props.contractWithSigner.checked_in_period())._value;
     
-                if (new Date(tx.start_from.toNumber() * 1000).getTime() === 0) {
+                    if (new Date(tx.start_from.toNumber() * 1000).getTime() === 0) {
+                        updateEventDetails({
+                            name: tx.event_name,
+                            startFrom: '',
+                            until: '',
+                            creator: '',
+                            checkIn: '',
+                            untilUNIX: '',
+                            checkInPeriod: ''
+                        });
+
+                        return;
+                    }
+                
                     updateEventDetails({
                         name: tx.event_name,
-                        startFrom: '',
-                        until: '',
-                        creator: '',
-                        checkIn: '',
-                        untilUNIX: '',
-                        checkInPeriod: ''
-                    });
-                    
-                    return;
+                        startFrom: new Date(tx.start_from.toNumber() * 1000).toLocaleString(),
+                        until: new Date(tx.until.toNumber() * 1000).toLocaleString(),
+                        creator: tx.creator,
+                        checkIn: new Date((tx.until.toNumber() + parseInt(checkInperiodTX)) * 1000).toLocaleString(),
+                        untilUNIX: tx.until.toString(),
+                        checkInPeriod: checkInperiodTX
+                    });   
+                } else {
+                    updateEventDetails({
+                        name: 'Please connect metamask',
+                        startFrom: '0',
+                        until: '0',
+                        creator: '0x00',
+                        checkIn: '0',
+                        untilUNIX: '0',
+                        checkInPeriod: '0'
+                    });   
                 }
-    
-                updateEventDetails({
-                    name: tx.event_name,
-                    startFrom: new Date(tx.start_from.toNumber() * 1000).toLocaleString(),
-                    until: new Date(tx.until.toNumber() * 1000).toLocaleString(),
-                    creator: tx.creator,
-                    checkIn: new Date((tx.until.toNumber() + parseInt(checkInperiodTX)) * 1000).toLocaleString(),
-                    untilUNIX: tx.until.toString(),
-                    checkInPeriod: checkInperiodTX
-                });
             }
     
             setInterval(() => {
@@ -117,14 +131,14 @@ const FetchEvent = (props: FetchEventProps) => {
 
     return (
         <>
-            {props.homePage ? <Countdown until={eventDetails.untilUNIX}/>
+            {props.homePage ? <Countdown address={props.address} until={eventDetails.untilUNIX}/>
             :
             <div className={styles.eventList}>
             <ul>
                 <li>Event: {eventDetails.name}</li>
                 <li>Starting from: {eventDetails.startFrom}</li>
                 <li>Ending: {eventDetails.until}</li>
-                <li>Countdown: {<Countdown until={eventDetails.untilUNIX}/>}</li>
+                <li>Countdown: {<Countdown address={props.address} until={eventDetails.untilUNIX}/>}</li>
                 <li>Checkin period: From {eventDetails.until} To {eventDetails.checkIn}</li>
                 <li>Event's Creator: {eventDetails.creator}</li>
             </ul>
@@ -134,7 +148,7 @@ const FetchEvent = (props: FetchEventProps) => {
     )
 }
 
-const Countdown = (props: {until: string}) => {
+const Countdown = (props: {until: string, address: string}) => {
 
     const [countdown, setCountdown] = React.useState({
         hours: 0,
@@ -166,7 +180,7 @@ const Countdown = (props: {until: string}) => {
 
         setIsMount(true);
 
-        if (isMount) {
+        if (isMount && props.address) {
             if (!Number.isNaN(parseInt(props.until))) {
                 setInterval(() => {
                     const now = (Date.now() / 1000).toFixed(0);

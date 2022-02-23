@@ -17,6 +17,7 @@ import fourButtonCSS from './css/FourButtonRSVP.module.css';
 import Header from './Header';
 import { Route, Routes } from 'react-router-dom';
 import TokenBalance from './TokenBalance';
+import Footer from './Footer';
 
 const App = () => {
 
@@ -32,16 +33,21 @@ const App = () => {
         <ConnectMetamask addressSigner={addressSigner} setAddressSigner={setAddressSigner}>
         <>
         <Routes>
-            <Route path="/" element={<Header address={addressSigner.address} balance={balance}/>}>
-                <Route path="home" element={<Homepage />} />
+            <Route path="/" element={
+            <>
+                <Header address={addressSigner.address} setAddressSigner={setAddressSigner} balance={balance}/>
+                <Footer />
+            </>
+            }>
+                <Route path="home" element={<Homepage address={addressSigner.address} />} />
                 <Route path="buy" element={<BuyToken {...useToken}/>} />
                 <Route path="create" element={<CreateEvent {...useRSVP} />} />
                 <Route path="rsvp" element={
                     <div>
-                        <OngoingEventList homePage={false} {...useRSVP} />
+                        <OngoingEventList homePage={false} address={addressSigner.address} {...useRSVP} />
                         <div className={styles.userDetails}>
                             <RSVP balance={balance} {...useRSVP} />
-                            <StakeDetails {...useRSVP} />
+                            <StakeDetails address={addressSigner.address} {...useRSVP} />
                             <FourButton />
                         </div>
                     </div>
@@ -49,18 +55,18 @@ const App = () => {
                 <Route path="*" element={<></>}/>
             </Route>
         </Routes>
-        <TokenBalance setBalance={setBalance} {...useToken}/>
+        <TokenBalance setBalance={setBalance} addressSigner={addressSigner} {...useToken}/>
         </>
         </ConnectMetamask>
         </div>
     )
 };
 
-const Homepage = () => {
+const Homepage = (props: {address: string}) => {
 
     return (
         <div className={styles.home}>
-            <OngoingEventList homePage={true} {...useRSVP} />
+            <OngoingEventList address={props.address} homePage={true} {...useRSVP} />
         </div>
     )
 }
