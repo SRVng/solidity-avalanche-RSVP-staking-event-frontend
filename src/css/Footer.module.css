@@ -1,0 +1,48 @@
+@import './vars.css';
+
+.container {
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    width: 99%;
+    height: 9vh;
+
+    background: rgba(202, 203, 238, 0.75);
+
+    position: absolute;
+    bottom: 10px;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.footer {
+    position: fixed;
+    width: 100%;
+    padding: 5px 5px;
+    text-align: center;
+
+    font-family: var(--font-family);
+    font-size: large;
+    font-weight: bolder;
+}
+
+.clock {
+    width: 210px;
+    margin: 0 auto;
+    margin-right: 1rem;
+}
+
+.clock p {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px 10px;
+    height: 15px;
+
+    background-color: #BDB3F5;
+
+    font-family: var(--font-family);
+    font-size: larger;
+    color: black;
+}
