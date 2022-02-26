@@ -3,7 +3,6 @@
 .container {
     font-family: var(--font-family);
     border-radius: 20px;
-    padding: 20px 20px;
 }
 
 .eventList {
@@ -12,17 +11,23 @@
 
 .eventList ul {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     list-style-type: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 2rem;
 }
 
 .eventList ul li {
     
+    margin: auto;
+
     border: 2px solid black;
     border-radius: 20px;
 
     padding: 10px;
-    width: 600px;
+    height: 2rem;
+    width: 380px;
     margin-bottom: 20px;
 
     background-color: rgba(var(--primary-color), 0.5);
@@ -30,4 +35,47 @@
 
 .eventList ul li :nth-child(n) {
     display: inline;
+}
+
+.countdownText {
+    text-align: center;
+    font-size: 30px;
+    margin-top: -0.5rem;
+}
+
+.countdownText p {
+    margin: 0 auto;
+}
+
+@media only screen and (max-width: 844px) {
+        .container {
+            padding: 10px 0px;
+            margin: auto;
+            margin-right: 0.8rem;
+        }
+        .eventList ul {
+            display: flex;
+            flex-direction: column;
+        }
+        .eventList ul li {
+            width: 80vw;
+            font-size: small;
+        }
+    }
+
+@media only screen and (min-width: 1023px) and (max-width: 1200px) {
+    .container {
+        padding: 10px 0px;
+        margin: auto;
+        margin-right: 0.8rem;
+    }
+    .eventList ul {
+        display: flex;
+        flex-direction: column;
+    }
+    .eventList ul li {
+        height: 3rem;
+        width: 80vw;
+        font-size: larger;
+    }
 }

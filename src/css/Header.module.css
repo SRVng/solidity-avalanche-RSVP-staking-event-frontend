@@ -105,3 +105,80 @@
     border-radius: 20px;
     box-shadow: 0px 0px 10px 5px white;
 }
+
+.mobileNavBarCon,
+.mobileNavBar {
+    display: none;
+}
+
+@media only screen and (max-width: 844px),
+    only screen and (min-width: 1023px) and (max-width: 1100px) {
+    .navbar {
+        display: none;
+    }
+    .mobileNavBarCon,
+    .mobileNavBar {
+        display: block;
+    }
+
+    @keyframes menuShowUp {
+        0% {
+            opacity: 0
+        }
+        100% {
+            opacity: 1
+        }
+    }
+
+    .mobileMenu {
+        position: absolute;
+        z-index: 1;
+
+        align-items: center;
+    
+        top: 5%;
+        left: 20px;
+        opacity: 0;
+    
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        transition: 0.5s ease;
+    
+        pointer-events: none;
+
+        background: #333;
+    }
+
+    .mobileMenuActive {
+        position: absolute;
+        z-index: 1;
+    
+        align-items: center;
+
+        top: 4rem;
+        left: 20px;
+        opacity: 1;
+    
+        display: flex;
+        flex-direction: column;
+        width: 30vw;
+        transition: 0.5s ease;
+    
+        background: #333;
+        animation: menuShowUp 1s;
+    }
+    .balance {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 1101px) and (max-width: 1180px) {
+    .navLink .menu {
+        display: flex;
+        gap: 30px;
+    }
+    .balance {
+        display: none;
+    }
+}

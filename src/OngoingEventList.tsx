@@ -108,13 +108,13 @@ const FetchEvent = (props: FetchEventProps) => {
             )
         } else if ((parseInt(eventDetails.untilUNIX) - (Date.now() / 1000)) < (-1 * parseInt(eventDetails.checkInPeriod))) {
             return (
-                <div>
+                <div className={styles.countdownText}>
                     <p>Check-in period done, Please wait event's creator end this event. </p>  
                 </div>
             )
         } else if ((parseInt(eventDetails.untilUNIX) - (Date.now() / 1000)) < 0) {
             return (
-                <div>
+                <div className={styles.countdownText}>
                     <p>It's check-in period.</p>
                 </div>
             )
@@ -201,11 +201,11 @@ const Countdown = (props: {until: string, address: string}) => {
     }, [props.until])
 
     if (countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) {
-        return <div className={styles.setFont}><p>Event ended, Please check-in</p></div>
+        return <div><p>Event ended, Please check-in</p></div>
     }
 
     return (
-        <div className={styles.setFont}>{countdown.hours}:{countdown.minutes}:{countdown.seconds}</div>
+        <div>{countdown.hours}:{countdown.minutes}:{countdown.seconds}</div>
     )
 }
 

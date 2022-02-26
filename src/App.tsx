@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BuyToken from './BuyToken';
 import CheckIn from './CheckIn';
 import ConnectMetamask from './ConnectMetamask';
@@ -15,7 +15,7 @@ import styles from './css/App.module.css';
 import fourButtonCSS from './css/FourButtonRSVP.module.css';
 
 import Header from './Header';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import TokenBalance from './TokenBalance';
 import Footer from './Footer';
 
@@ -28,15 +28,34 @@ const App = () => {
 
     const [balance, setBalance] = React.useState('');
 
+    const [width, setWindowWidth] = React.useState(0);
+
+    const location = useLocation();
+
+    const updateWidth = () => {
+        const width = window.screen.width;
+        setWindowWidth(width);
+    }
+    
+     useEffect(() => {
+       updateWidth();
+       
+       window.addEventListener("resize", updateWidth);
+
+       return () => {
+         window.removeEventListener("resize", updateWidth);
+       }
+     }, [])
+
     return (
-        <div className={styles.bg}>    
+        <div className={styles.container}>
+        <div className={location.pathname === '/rsvp' && width < 1181 ? styles.bgRsvp : styles.bg}>    
         <ConnectMetamask addressSigner={addressSigner} setAddressSigner={setAddressSigner}>
         <>
         <Routes>
             <Route path="/" element={
             <>
-                <Header address={addressSigner.address} setAddressSigner={setAddressSigner} balance={balance}/>
-                <Footer />
+                <Header address={addressSigner.address} setAddressSigner={setAddressSigner} balance={balance} width={width}/>
             </>
             }>
                 <Route path="home" element={<Homepage address={addressSigner.address} />} />
@@ -56,8 +75,11 @@ const App = () => {
             </Route>
         </Routes>
         <TokenBalance setBalance={setBalance} addressSigner={addressSigner} {...useToken}/>
+        <br/>
+        <Footer width={width}/>
         </>
         </ConnectMetamask>
+        </div>
         </div>
     )
 };
