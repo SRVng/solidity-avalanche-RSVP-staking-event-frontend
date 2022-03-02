@@ -45,10 +45,18 @@ function ConnectMetamask(props: ConnectMetamaskProps) {
     });
     }
 
-    if (props.addressSigner.address) {
+    if (props.addressSigner.address && window.ethereum !== undefined) {
       checkChainId();
     }
   })
+
+  if (window.ethereum === undefined) {
+    return (
+      <div className={styles.container}>
+        {props.children}
+      </div>
+    );
+  }
 
   window.ethereum.on('accountsChanged', () => {
     if (props.addressSigner.address) {

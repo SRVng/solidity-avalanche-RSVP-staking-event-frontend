@@ -4,14 +4,14 @@ import { getAddress, getContractWithSigner } from './utils';
 import styles from './css/StakeDetails.module.css';
 
 interface StakeDetailsProps {
-    RSVP: ethers.Contract
+    RSVP: ethers.Contract | null
     address: string
-    signer: string | ethers.providers.JsonRpcSigner
+    signer: string | ethers.providers.JsonRpcSigner | null
 }
 
 const StakeDetails = (props: StakeDetailsProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+    const contractWithSigner = (props.RSVP && props.signer) ? getContractWithSigner(props.RSVP, props.signer) : null;
 
     return (
         <div>
@@ -21,7 +21,7 @@ const StakeDetails = (props: StakeDetailsProps) => {
 };
 
 interface StakeProps {
-    contractWithSigner: ethers.Contract
+    contractWithSigner: ethers.Contract | null
     address: string
 }
 
@@ -37,6 +37,10 @@ const AllStake = (props: StakeProps) => {
     const [totalStake, updateTotalStake] = React.useState('0');
 
     const fetchStakeAmount = async () => {
+
+        if (!props.contractWithSigner) {
+            return
+        }
 
         let tx = await props.contractWithSigner.total_stake();
         updateTotalStake(tx[1].toString());

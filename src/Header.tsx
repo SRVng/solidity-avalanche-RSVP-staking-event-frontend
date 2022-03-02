@@ -29,7 +29,9 @@ const Header = (props: {address: string, balance: string, setAddressSigner: Func
           }
         }
     
-        checkExistConnect();
+        if (window.ethereum !== undefined) {
+            checkExistConnect();
+        }
     }, []);
 
   return (
@@ -144,8 +146,10 @@ const ShowAddress = (props: {address: string, setAddressSigner: Function}) => {
     const metamaskImage = <img src={metamaskLogo} alt="" width={20} height={20}/>
 
     const load = async () => {
-        const signer = await getSigner();
-        props.setAddressSigner({address: await signer.getAddress(), signer: signer});
+        if (window.ethereum !== undefined) {
+            const signer = await getSigner();
+            props.setAddressSigner({address: await signer.getAddress(), signer: signer});
+        }
     }
 
     return (

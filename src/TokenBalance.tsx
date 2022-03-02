@@ -3,21 +3,24 @@ import React from 'react'
 import { getContractWithSigner, getProvider, transactionPopup } from './utils'
 
 interface TokenBalanceProps {
-    token: ethers.Contract,
-    signer: string | ethers.providers.JsonRpcSigner
+    token: ethers.Contract | null,
+    signer: string | ethers.providers.JsonRpcSigner | null
     setBalance: Function
     addressSigner: {
         address: string
-        signer: string | ethers.providers.JsonRpcSigner
+        signer: string | ethers.providers.JsonRpcSigner | null
     }
 }
 
 const TokenBalance = (props: TokenBalanceProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.token, props.signer);
+    const contractWithSigner = (props.token && props.signer) ?  getContractWithSigner(props.token, props.signer) : null;
     // const address = getProvider().getSigner().getAddress();
     
     const fetchBalance = async () => {
+        if (!contractWithSigner) {
+            return
+        }
         let tx = await contractWithSigner.balanceOf(props.addressSigner.address);
         let balance = ethers.utils.formatEther(tx);
         props.setBalance(balance);

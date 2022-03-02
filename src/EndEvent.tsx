@@ -3,15 +3,19 @@ import React from 'react';
 import { getContractWithSigner, transactionPopup, getAddress, getSignature } from './utils';
 
 interface EndEventProps {
-    RSVP: ethers.Contract
-    signer: string | ethers.providers.JsonRpcSigner
+    RSVP: ethers.Contract | null
+    signer: string | ethers.providers.JsonRpcSigner | null
 }
 
 const EndEvent = (props: EndEventProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+    const contractWithSigner = (props.RSVP && props.signer) ? getContractWithSigner(props.RSVP, props.signer) : null;
 
     const requestSignature = async () => {
+
+        if (!contractWithSigner) {
+            return
+        }
 
         const eventDetails = await contractWithSigner.ongoing_event();
 
@@ -35,6 +39,11 @@ const EndEvent = (props: EndEventProps) => {
     }
 
     const endEventButton = async ({sig, EndEventData}: any) => {
+
+        if (!contractWithSigner) {
+            return
+        }
+
         let address = await getAddress();
 
         try {

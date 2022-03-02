@@ -8,6 +8,10 @@ export const network = {
 
 export const getProvider = (setNetwork?: {name: string, chainId: number}) => {
 
+    if (window.ethereum === undefined) {
+        return null!
+    }
+
     if (setNetwork !== undefined) {
         const provider = new ethers.providers.Web3Provider(window.ethereum, setNetwork);
 
@@ -87,14 +91,20 @@ export const transactionPopup = (
     }
 }
 
-export const useRSVP = {
+export const useRSVP = window.ethereum ? {
     RSVP: getContract("RSVP"),
     signer: getProvider().getSigner()
+} : {
+    RSVP: null,
+    signer: null
 };
 
-export const useToken = {
+export const useToken = window.ethereum ? {
     token: getContract("token"),
     signer: getProvider().getSigner()
+} : {
+    token: null,
+    signer: null
 };
 
 export interface CreateParams {

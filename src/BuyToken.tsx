@@ -4,8 +4,8 @@ import { getContractWithSigner, transactionPopup } from './utils';
 import styles from './css/BuyToken.module.css';
 
 interface SwapProps {
-    token: ethers.Contract
-    signer: string | ethers.providers.JsonRpcSigner
+    token: ethers.Contract| null
+    signer: string | ethers.providers.JsonRpcSigner | null
 }
 
 const BuyToken = (props: SwapProps) => {
@@ -23,6 +23,7 @@ const BuyToken = (props: SwapProps) => {
     const AVAX = tryConvert(state.amount);
 
     const swap = async () => {
+        if (props.token !== null && props.signer !== null) {
         const contractWithSigner = getContractWithSigner(props.token, props.signer);
         try {
             let tx = await contractWithSigner.swap({value: ethers.utils.parseEther(AVAX)});
@@ -30,6 +31,7 @@ const BuyToken = (props: SwapProps) => {
         } catch(e: any) {
             console.error(e);
             transactionPopup(e.hash, true, e.data.message);
+        }
         }
     }
 

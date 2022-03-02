@@ -4,14 +4,14 @@ import { getContractWithSigner, getSignature, transactionPopup } from './utils';
 import styles from './css/RSVP.module.css';
 
 interface RSVPProps {
-    RSVP: ethers.Contract
-    signer: string | ethers.providers.JsonRpcSigner
+    RSVP: ethers.Contract | null
+    signer: string | ethers.providers.JsonRpcSigner | null
     balance: string
 }
 
 const RSVP = (props: RSVPProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+    const contractWithSigner = (props.RSVP && props.signer) ? getContractWithSigner(props.RSVP, props.signer) : null;
 
     const [stakeAmount, setStakeAmount] = React.useState(0);
 
@@ -32,6 +32,10 @@ const RSVP = (props: RSVPProps) => {
 
     const requestSignature = async () => {
 
+        if (!contractWithSigner) {
+            return null
+        }
+
         const eventDetails = await contractWithSigner.ongoing_event();
 
         const RSVPData = {
@@ -48,6 +52,10 @@ const RSVP = (props: RSVPProps) => {
 
     const sendRSVP = async ({sig, RSVPData}: any) => {
 
+        if (!contractWithSigner) {
+            return 
+        }
+
         try {
             let tx = await contractWithSigner.RSVP(
                 ethers.BigNumber.from(stakeAmount),
@@ -62,6 +70,9 @@ const RSVP = (props: RSVPProps) => {
     }
 
     const handleOnClick = async () => {
+        if (window.ethereum === undefined) {
+            return null
+        }
         sendRSVP(await requestSignature());
     }
 

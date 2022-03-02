@@ -4,17 +4,24 @@ import { getContractWithSigner, getSignature, transactionPopup } from './utils';
 import styles from './css/CreateEvent.module.css';
 
 interface CreateEventProps {
-    RSVP: ethers.Contract
-    signer: string | ethers.providers.JsonRpcSigner
+    RSVP: ethers.Contract | null
+    signer: string | ethers.providers.JsonRpcSigner | null
 };
 
 const CreateEvent = (props: CreateEventProps) => {
 
-    const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+    if (props.RSVP && props.signer) {
+        const contractWithSigner = getContractWithSigner(props.RSVP, props.signer);
+        return (
+            <div>
+                <CreateEventWithInput contractWithSigner={contractWithSigner} />
+            </div>
+        )        
+    }
 
     return (
         <div>
-            <CreateEventWithInput contractWithSigner={contractWithSigner} />
+            <CreateEventWithInput />
         </div>
     )
 };
@@ -25,11 +32,14 @@ interface CreateEventInput {
     stake: BigNumber
 }
 
-const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
+const CreateEventWithInput = (props: {contractWithSigner?: ethers.Contract}) => {
 
     const [inputState, updateInputState] = React.useState<CreateEventInput>();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!props.contractWithSigner) {
+            return
+        }
         const target = e.target;
         const value = 
             target.type === 'text' ? target.value :
@@ -55,6 +65,10 @@ const CreateEventWithInput = (props: {contractWithSigner: ethers.Contract}) => {
     }
 
     const createEvent = async ({sig, CreateData}: any) => {
+
+        if (!props.contractWithSigner) {
+            return null
+        }
         
         try {
             let tx = await props.contractWithSigner.RSVP_Create(

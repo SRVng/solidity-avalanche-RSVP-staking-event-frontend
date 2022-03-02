@@ -4,19 +4,26 @@ import { getContractWithSigner } from './utils';
 import styles from './css/OngoingEventList.module.css';
 
 interface OngoingEventListProps {
-    RSVP: ethers.Contract
+    RSVP: ethers.Contract | null
     address: string
-    signer: string | ethers.providers.JsonRpcSigner
+    signer: string | ethers.providers.JsonRpcSigner | null
     homePage: boolean
 };
 
 const OngoingEventList = (props: OngoingEventListProps) => {
 
-    const contractWithSigner = props.address ? getContractWithSigner(props.RSVP, props.signer) : null;
+    if (props.RSVP && props.signer) {
+        const contractWithSigner = props.address ? getContractWithSigner(props.RSVP, props.signer) : null;
+        return (
+            <div className={styles.container}>
+                <FetchEvent address={props.address} contractWithSigner={contractWithSigner} homePage={props.homePage}/>
+            </div>
+        )
+    }
 
   return (
       <div className={styles.container}>
-          <FetchEvent address={props.address} contractWithSigner={contractWithSigner} homePage={props.homePage}/>
+          <FetchEvent address={props.address} contractWithSigner={null} homePage={props.homePage}/>
       </div>
   )
 };
